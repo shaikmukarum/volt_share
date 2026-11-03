@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Theme helpers. The palette itself lives in tailwind.config.js        */
+/* (CSS variables); these few rules only add what colour swaps cannot.  */
+/* The dark theme needs none of them: it is the untouched default.      */
+/* ------------------------------------------------------------------ */
+[data-theme='light'] { color-scheme: light; }
+[data-theme='dark'] { color-scheme: dark; }
+
+/* Page: warm cream (#FAF7F2) with soft organic forest-green glows and a faint grid */
+[data-theme='light'].vs-root {
+  isolation: isolate;
+  background-color: #faf7f2;
+  background-image:
+    radial-gradient(880px 520px at 6% -4%, rgb(21 128 61 / 0.14), transparent 62%),
+    radial-gradient(720px 440px at 98% 2%, rgb(22 163 74 / 0.11), transparent 60%),
+    radial-gradient(900px 620px at 52% 108%, rgb(21 128 61 / 0.10), transparent 66%);
+}
+[data-theme='light'].vs-root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(21 128 61 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(21 128 61 / 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 0%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 0%, #000 20%, transparent 75%);
+}
+
+/* Cards: frosted white with a soft, wide, low-contrast shadow */
+[data-theme='light'] .vs-card {
+  background-color: rgb(255 255 255 / 0.8);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.04), inset 0 1px 0 rgb(255 255 255 / 0.9);
+}
+
+/* Editorial serif headings paired with the sans body (both themes) */
+[data-theme] h1 {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.02em;
+}
+
+/* Soft mint badges (distance pills, completed status) */
+[data-theme='light'] .vs-mint {
+  background-color: #e6f4ea;
+  color: #137333;
+  border-color: #c3e1cb;
+}
+
+/* Primary button: forest green, deepening on hover */
+[data-theme='light'] .vs-btn-primary { background-color: #15803d; }
+[data-theme='light'] .vs-btn-primary:hover:not(:disabled) { background-color: #1b5e3a; }
+
+/* SOS: refined crimson outline on a soft rose tint */
+[data-theme='light'] .vs-danger {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+[data-theme='light'] .vs-danger:hover:not(:disabled) { background-color: #fee2e2; }
+
+/* Smooth cross-fade, applied only for the moment the theme is toggled */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease,
+    fill 300ms ease, stroke 300ms ease, box-shadow 300ms ease !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-switching, .theme-switching *, .theme-switching *::before, .theme-switching *::after {
+    transition: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Per-tab page backgrounds (signed-in console)                         */
+/* App.jsx sets data-vs-bg="<view>" on the root; each rule layers a     */
+/* theme-aware scrim over the photo so cards and headings stay legible. */
+/* ------------------------------------------------------------------ */
+[data-theme].vs-root[data-vs-bg='home'],
+[data-theme].vs-root[data-vs-bg='stations'],
+[data-theme].vs-root[data-vs-bg='history'],
+[data-theme].vs-root[data-vs-bg='about'],
+[data-theme].vs-root[data-vs-bg='contact'] {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+/* the light theme's faint grid would sit on top of the photo */
+[data-theme='light'].vs-root[data-vs-bg='home']::before,
+[data-theme='light'].vs-root[data-vs-bg='stations']::before,
+[data-theme='light'].vs-root[data-vs-bg='history']::before,
+[data-theme='light'].vs-root[data-vs-bg='about']::before,
+[data-theme='light'].vs-root[data-vs-bg='contact']::before { display: none; }
+
+/* Dark theme: light dimming only, so white text stays readable */
+[data-theme='dark'].vs-root[data-vs-bg='home'] {
+  background-image: linear-gradient(rgb(9 9 11 / 0.4), rgb(9 9 11 / 0.5)), url('/images/vs-bg-home.webp');
+}
+[data-theme='dark'].vs-root[data-vs-bg='stations'],
+[data-theme='dark'].vs-root[data-vs-bg='history'],
+[data-theme='dark'].vs-root[data-vs-bg='about'] {
+  background-image: linear-gradient(rgb(9 9 11 / 0.55), rgb(9 9 11 / 0.65)), url('/images/vs-bg-botanical.webp');
+}
+[data-theme='dark'].vs-root[data-vs-bg='contact'] {
+  background-image: linear-gradient(rgb(9 9 11 / 0.4), rgb(9 9 11 / 0.5)), url('/images/vs-bg-support.webp');
+}
+
+/* Light theme: no overlay, the photo is shown as-is */
+[data-theme='light'].vs-root[data-vs-bg='home'] {
+  background-image: url('/images/vs-bg-home.webp');
+}
+[data-theme='light'].vs-root[data-vs-bg='stations'],
+[data-theme='light'].vs-root[data-vs-bg='history'],
+[data-theme='light'].vs-root[data-vs-bg='about'] {
+  background-image: url('/images/vs-bg-botanical.webp');
+}
+[data-theme='light'].vs-root[data-vs-bg='contact'] {
+  background-image: url('/images/vs-bg-support.webp');
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Dark theme legibility (User + Host consoles)                         */
+/* Lifts the dim secondary greys one step and the green accent so text  */
+/* stays readable over the background photos. Light theme is untouched. */
+/* ------------------------------------------------------------------ */
+[data-theme='dark'] {
+  --c-zinc-300: 228 228 231;    /* was zinc-300, now zinc-200 */
+  --c-zinc-400: 212 212 216;    /* was zinc-400, now zinc-300 */
+  --c-zinc-500: 161 161 170;    /* was zinc-500, now zinc-400 */
+  --c-emerald-400: 110 231 183; /* was emerald-400, now emerald-300 */
+}
+/* soft shadow so headings and paragraphs lifted straight off a photo stay crisp */
+[data-theme='dark'] :is(h1, h2, h3, p, label) {
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.45);
+}
