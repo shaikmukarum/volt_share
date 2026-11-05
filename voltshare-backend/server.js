@@ -575,7 +575,15 @@ async function ensureSchema() {
         console.warn('Could not verify/add new users columns. Run the files in sql/ manually:', err.message);
     }
 }
-
+// Health check for the uptime pinger: also queries the database so Aiven sees activity
+app.get('/api/health', async (req, res) => {
+    try {
+        await pool.query('SELECT 1');
+        res.json({ status: 'ok' });
+    } catch (e) {
+        res.status(500).json({ status: 'db_error', message: e.message });
+    }
+});
 const PORT = process.env.PORT || 5000;
 ensureSchema().then(() => {
     app.listen(PORT, () => console.log(`VoltShare Backend running on http://localhost:${PORT}`));
